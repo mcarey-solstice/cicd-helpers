@@ -1,0 +1,45 @@
+#!/usr/bin/env bash
+
+function package() {
+  local output_dir=out
+  local args=()
+  while [[ -n "$1" ]]; do
+    case "$1" in
+      --output-dir | -o )
+        output_dir="$2"
+        shift
+        ;;
+      * )
+        args+=("$1")
+        ;;
+    esac
+    shift
+  done
+
+  set -- ${args[@]}
+
+  local version="$1"
+  local destination="${2:-dist}"
+
+  if [[ -z "$version" ]]; then
+    {
+      echo "Usage:  $0 VERSION [DESTINATION]"
+      echo "  VERSION      The version of the scripts that are being packaged"
+      echo "  DESTINATION  The destination directory for the tarball [default: dist]"
+    } >&2
+  fi
+
+  mkdir -p $destination
+
+  echo $version > $output_dir/VERSION
+  tar -cvf $destination/cicd-helpers-${version}.tgz -C $output_dir .
+}
+
+if [[ ${BASH_SOURCE[0]} != $0 ]]; then
+  export -f package
+else
+  set -eo pipefail
+
+  package "${@:-}"
+  exit $?
+fi

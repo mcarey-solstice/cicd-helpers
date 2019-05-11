@@ -1,0 +1,28 @@
+###
+# https://travis-ci.org/mcarey-solstice/cicd-helpers
+##
+
+services:
+  - docker
+
+before_install:
+  - echo "Pulling docker images"
+  - docker pull matejak/argbash
+  - docker pull bats/bats
+
+before_script:
+  - echo "Building scripts"
+  - docker run --entrypoint bash -v $PWD:/work -w /work matejak/argbash ./bin/generate src/*.sh
+
+script:
+  - docker run --entrypoint bash -v $PWD:/work -w /work bats/bats bats test/*.bats
+
+before_deploy:
+  - ./bin/package ${TRAVIS_TAG} dist
+
+deploy:
+  provider: releases
+  api_key: $GITHUB_TOKEN
+  file: dist/cicd-helpers-${TRAVIS_TAG}.tgz
+  on:
+    tags: true
