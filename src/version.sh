@@ -82,6 +82,13 @@ function main() {
     fi
   done
 
+  # If the identifier is set to rc and we have not explicitly specified a bump,
+  #  then we can assume that we only need to strip the rc flag.  I.e. it is no
+  #  longer a release candidate, but a release itself.
+  if [[ -z "$size" && "$identifier" == rc ]]; then
+    current_patch=$((current_patch-1))
+  fi
+
   case ${size:-patch} in
     patch )
       _format_version $((current_major)) $((current_minor)) $((current_patch+1))

@@ -59,3 +59,10 @@ load helpers/print/bprint
   [ $status -eq 0 ]
   [[ "$output" == v1.0.0-rc.2 ]]
 }
+
+@test "It should remove rc identifier and not bump version" {
+  run $SCRIPT v1.0.0-rc.1
+
+  [ $status -eq 0 ]
+  [[ "$output" == v1.0.0 ]]
+}
