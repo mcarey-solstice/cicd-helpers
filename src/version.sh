@@ -72,6 +72,13 @@ function main() {
     var=_arg_$s
     if [[ ${!var} != off && -z "$identifier" ]]; then
       identifier=$s
+
+      # The next version if adding an rc flag should be the next lowest version
+      if [[ $patch_enabled == true ]]; then
+        current_patch=$((current_patch+1))
+      else
+        current_minor=$((current_minor+1))
+      fi
     fi
   done
 

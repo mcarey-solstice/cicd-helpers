@@ -46,9 +46,16 @@ load helpers/print/bprint
   [[ "$output" == v2.0.0 ]]
 }
 
-@test "It should add an rc identifier" {
+@test "It should add an rc identifier and bump patch version" {
   run $SCRIPT v1.0.0 --rc
 
   [ $status -eq 0 ]
-  [[ "$output" == v1.0.0-rc.1 ]]
+  [[ "$output" == v1.0.1-rc.1 ]]
+}
+
+@test "It should bump rc version and not patch version" {
+  run $SCRIPT v1.0.0-rc.1 --rc
+
+  [ $status -eq 0 ]
+  [[ "$output" == v1.0.0-rc.2 ]]
 }
