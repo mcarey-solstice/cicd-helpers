@@ -17,6 +17,7 @@ exit 11  #)Created by argbash-init v2.8.0
 function main() {
   local prefix=''
   local version="${_arg_version/v/}"
+  local default_size=patch
 
   if [[ "$version" != "$_arg_version" ]]; then
     prefix=v
@@ -59,6 +60,7 @@ function main() {
     :
   else
     patch_enabled=false
+    default_size=minor
   fi
 
   for s in major minor patch rc; do
@@ -86,10 +88,14 @@ function main() {
   #  then we can assume that we only need to strip the rc flag.  I.e. it is no
   #  longer a release candidate, but a release itself.
   if [[ -z "$size" && "$identifier" == rc ]]; then
-    current_patch=$((current_patch-1))
+    if [[ $patch_enabled == true ]]; then
+      current_patch=$((current_patch-1))
+    else
+      current_minor=$((current_minor-1))
+    fi
   fi
 
-  case ${size:-patch} in
+  case ${size:-$default_size} in
     patch )
       _format_version $((current_major)) $((current_minor)) $((current_patch+1))
       ;;
