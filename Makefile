@@ -22,3 +22,6 @@ endif
 
 $(OUT):
 	@$(_BIN)/generate $(ARGBASH) $(SRC)/*.sh
+
+test: $(OUT)
+	@bats test/*.bats
