@@ -68,6 +68,13 @@ function main() {
     fi
   done
 
+  for s in rc; do
+    var=_arg_$s
+    if [[ ${!var} != off && -z "$identifier" ]]; then
+      identifier=$s
+    fi
+  done
+
   case ${size:-patch} in
     patch )
       _format_version $((current_major)) $((current_minor)) $((current_patch+1))

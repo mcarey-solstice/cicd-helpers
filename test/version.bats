@@ -45,3 +45,10 @@ load helpers/print/bprint
   [ $status -eq 0 ]
   [[ "$output" == v2.0.0 ]]
 }
+
+@test "It should add an rc identifier" {
+  run $SCRIPT v1.0.0 --rc
+
+  [ $status -eq 0 ]
+  [[ "$output" == v1.0.0-rc.1 ]]
+}
