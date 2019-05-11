@@ -1,0 +1,39 @@
+#!/usr/bin/env bash
+
+function generate() {
+  local output_dir=out
+  local args=()
+  while [[ -n "$1" ]]; do
+    case "$1" in
+      --output-dir | -o )
+        output_dir="$2"
+        shift
+        ;;
+      * )
+        args+=("$1")
+        ;;
+    esac
+    shift
+  done
+
+  mkdir -p $output_dir/bin $output_dir/man $output_dir/etc
+
+  for script in ${args[@]}; do
+    local name=$(basename $script .sh)
+
+    argbash $script -o $output_dir/bin/$name
+    argbash $script -o $output_dir/etc/${name}_completion.sh -t completion --strip all
+    argbash $script -o $output_dir/man/${name}.1 -t manpage --strip all
+
+    chmod +x $output_dir/bin/$name
+  done
+}
+
+if [[ ${BASH_SOURCE[0]} != $0 ]]; then
+  export -f generate
+else
+  set -eo pipefail
+
+  generate "${@:-}"
+  exit $?
+fi

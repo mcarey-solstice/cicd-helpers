@@ -1,0 +1,3 @@
+# vi:syntax=sh
+
+export PATH=$PWD/vendor/.bin:$PATH
