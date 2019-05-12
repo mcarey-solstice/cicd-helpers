@@ -19,7 +19,7 @@ else
 	detected_OS := $(patsubst MINGW%,MSYS,$(detected_OS))
 endif
 
-USE_DOCKER ?= $(if $(or $(call eq,$(detected_OS),Darwin),$(call eq,$(USE_DOCKER),true)),true,false)
+USE_DOCKER ?= $(if $(call eq,$(detected_OS),Darwin),true,false)
 
 ifeq ($(USE_DOCKER),true)
 	ARGBASH_BIN = $(BIN)/argbash-run-docker $(BIN)
