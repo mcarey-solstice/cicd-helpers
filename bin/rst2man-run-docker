@@ -1,0 +1,2 @@
+#!/bin/bash
+docker run -it --rm -v "$(pwd):/work" -w /work --entrypoint bash mcareysolstice/rst2man "$@"
