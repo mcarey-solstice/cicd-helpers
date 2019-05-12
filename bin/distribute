@@ -24,9 +24,9 @@ function distribute() {
   git rm -rf .
 
   local tmpdir="$(mktemp -d)"
-  mv .git/ out/* $tmpdir
+  mv .git/ out/ $tmpdir
   find . ! -name '.' ! -name '..' -delete
-  mv $tmpdir/* .
+  mv $tmpdir/.git/ $tmpdir/out/* .
 
   git commit -m "Distribution for $version"
   git push origin dist/$version
