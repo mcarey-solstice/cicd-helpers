@@ -30,10 +30,12 @@ before_deploy:
 deploy:
 - provider: script
   script: ./bin/distribute ${TRAVIS_TAG}
+  skip_cleanup: true
   on:
     tags: true
 - provider: releases
   api_key: $GITHUB_TOKEN
   file: dist/cicd-helpers-${TRAVIS_TAG}.tgz
+  skip_cleanup: true
   on:
     tags: true
