@@ -28,6 +28,7 @@ function distribute() {
   find . ! -name '.' ! -name '..' -delete
   mv $tmpdir/.git/ $tmpdir/out/* .
 
+  git add .
   git commit -m "Distribution for $version"
   git push origin dist/$version
 }
