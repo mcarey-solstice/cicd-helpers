@@ -1,0 +1,42 @@
+#!/usr/bin/env bash
+
+function distribute() {
+  local output_dir=out
+  local args=()
+  while [[ -n "$1" ]]; do
+    case "$1" in
+      --output-dir | -o )
+        output_dir="$2"
+        shift
+        ;;
+      * )
+        args+=("$1")
+        ;;
+    esac
+    shift
+  done
+
+  set -- ${args[@]}
+
+  local version="$1"
+
+  git checkout --orphan dist/$version
+  git rm -rf .
+
+  local tmpdir="$(mktemp -d)"
+  mv .git/ out/* $tmpdir
+  find ! -name '.' ! -name '..' -delete
+  mv $tmpdir/* .
+
+  git commit -m "Distribution for $version"
+  git push origin dist/$version
+}
+
+if [[ ${BASH_SOURCE[0]} != $0 ]]; then
+  export -f distribute
+else
+  set -eo pipefail
+
+  distribute "${@:-}"
+  exit $?
+fi

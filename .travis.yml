@@ -9,19 +9,24 @@ before_install:
   - echo "Pulling docker images"
   - docker pull matejak/argbash
   - docker pull bats/bats
+  - docker pull mcareysolstice/rst2man
 
 before_script:
-  - echo "Building scripts"
-  - docker run --entrypoint bash -v $PWD:/work -w /work matejak/argbash ./bin/generate src/*.sh
+  - make scripts
 
 script:
-  - docker run --entrypoint bash -v $PWD:/work -w /work bats/bats bats test/*.bats
+  - make test
 
 before_deploy:
+  - make VERSION=${TRAVIS_TAG} docs
   - ./bin/package ${TRAVIS_TAG} dist
 
 deploy:
-  provider: releases
+- provider: script
+  script: ./bin/distribute ${TRAVIS_TAG}
+  on:
+    tags: true
+- provider: releases
   api_key: $GITHUB_TOKEN
   file: dist/cicd-helpers-${TRAVIS_TAG}.tgz
   on:
