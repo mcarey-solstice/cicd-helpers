@@ -1,8 +1,14 @@
 #!/usr/bin/env make
 
+eq = $(and $(findstring x$(1),x$(2)), $(findstring x$(2),x$(1)))
+
 BIN = bin
 SRC = src
 OUT = out
+
+ARGBASH_BIN = $(BIN)
+RST2MAN_BIN = $(BIN)
+BATS_BIN = bats
 
 ifeq '$(findstring ;,$(PATH))' ';'
 	detected_OS := Windows
@@ -13,15 +19,21 @@ else
 	detected_OS := $(patsubst MINGW%,MSYS,$(detected_OS))
 endif
 
-_BIN = $(BIN)
-ifeq ($(detected_OS),Darwin)
-	_BIN = $(BIN)/argbash-run-docker $(BIN)
+USE_DOCKER ?= $(if $(or $(call eq,$(detected_OS),Darwin),$(call eq,$(USE_DOCKER),true)),true,false)
+
+ifeq ($(USE_DOCKER),true)
+	ARGBASH_BIN = $(BIN)/argbash-run-docker $(BIN)
+	RST2MAN_BIN = $(BIN)/rst2man-run-docker $(BIN)
+	BATS_BIN = $(BIN)/bats-docker
 endif
 
-.PHONY: $(OUT) test
+.PHONY: docs scripts test
 
-$(OUT):
-	@$(_BIN)/generate $(ARGBASH) $(SRC)/*.sh
+docs:
+	@$(RST2MAN_BIN)/generate-docs $(SRC)/*.sh
 
-test: $(OUT)
-	@bats test/*.bats
+scripts:
+	@$(ARGBASH_BIN)/generate-scripts $(SRC)/*.sh
+
+test: scripts
+	@$(BATS_BIN) test/*.bats

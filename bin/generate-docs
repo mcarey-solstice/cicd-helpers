@@ -1,0 +1,42 @@
+#!/usr/bin/env bash
+
+function generate-docs() {
+  local output_dir=out
+  local version=${VERSION:-latest}
+  local args=()
+  while [[ -n "$1" ]]; do
+    case "$1" in
+      --output-dir | -o )
+        output_dir="$2"
+        shift
+        ;;
+      --version | -v )
+        version="$2"
+        shift
+        ;;
+      * )
+        args+=("$1")
+        ;;
+    esac
+    shift
+  done
+
+  mkdir -p $output_dir/man
+
+  echo ".. |VERSION| replace:: $version" > man/.version-def.rst
+
+  for script in ${args[@]}; do
+    local name=$(basename $script .sh)
+
+    rst2man man/${name}.rst > $output_dir/man/${name}.1
+  done
+}
+
+if [[ ${BASH_SOURCE[0]} != $0 ]]; then
+  export -f generate-docs
+else
+  set -eo pipefail
+
+  generate-docs "${@:-}"
+  exit $?
+fi
