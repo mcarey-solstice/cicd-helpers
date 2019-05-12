@@ -1,2 +1,2 @@
 #!/bin/bash
-docker run -it --rm -v "$(pwd):/work" --entrypoint bash matejak/argbash "$@"
+docker run -it --rm -v "$(pwd):/work" -w /work --entrypoint bash matejak/argbash "$@"
