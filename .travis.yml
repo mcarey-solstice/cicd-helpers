@@ -2,6 +2,8 @@
 # https://travis-ci.org/mcarey-solstice/cicd-helpers
 ##
 
+language: general
+
 services:
   - docker
 
