@@ -1,9 +1,3 @@
-[submodule "vendor/bats-mock"]
-	path = vendor/bats-mock
-	url = https://github.com/jasonkarns/bats-mock.git
-[submodule "test/helpers/print"]
-	path = test/helpers/print
-	url = https://github.com/mcarey-solstice/bats-print
 [submodule "vendor/bats-print"]
 	path = vendor/bats-print
 	url = https://github.com/mcarey-solstice/bats-print
