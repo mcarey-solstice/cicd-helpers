@@ -25,7 +25,7 @@ function distribute() {
 
   local tmpdir="$(mktemp -d)"
   mv .git/ out/* $tmpdir
-  find ! -name '.' ! -name '..' -delete
+  find . ! -name '.' ! -name '..' -delete
   mv $tmpdir/* .
 
   git commit -m "Distribution for $version"
