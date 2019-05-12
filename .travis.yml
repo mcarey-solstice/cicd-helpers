@@ -7,6 +7,10 @@ language: general
 services:
   - docker
 
+env:
+  global:
+    - USE_DOCKER=true
+
 before_install:
   - echo "Pulling docker images"
   - docker pull matejak/argbash
