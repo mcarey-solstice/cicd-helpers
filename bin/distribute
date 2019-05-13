@@ -45,7 +45,7 @@ function distribute() {
   local github_url=$(git remote get-url origin)
   if [[ "${github_url:0:5}" == "https" && -n "$github_user" && -n "$github_token" ]]; then
     echo "Setting github remote origin with authentication"
-    trap EXIT "git remote set-url origin $github_url"
+    trap "git remote set-url origin $github_url" EXIT
     git remote set-url origin "https://${github_user}:${github_token}@$(echo ${github_url} | awk -F'://' '{print $2}')"
   fi
 
