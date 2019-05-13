@@ -2,11 +2,21 @@
 
 function distribute() {
   local output_dir=out
+  local github_token=${GITHUB_TOKEN:-}
+  local github_user=${GITHUB_USER:-}
   local args=()
   while [[ -n "$1" ]]; do
     case "$1" in
       --output-dir | -o )
         output_dir="$2"
+        shift
+        ;;
+      --token )
+        github_token="$2"
+        shift
+        ;;
+      --user )
+        github_user="$2"
         shift
         ;;
       * )
@@ -30,7 +40,13 @@ function distribute() {
 
   git add .
   git commit -m "Distribution for $version"
-  git push origin dist/$version
+
+  local push_cmd="git push origin dist/$version"
+  if [[ -n "$github_user" && -n "$github_token" ]]; then
+    $push_cmd < <(echo "$github_user"; echo "$github_token")
+  else
+    $push_cmd
+  fi
 }
 
 if [[ ${BASH_SOURCE[0]} != $0 ]]; then
