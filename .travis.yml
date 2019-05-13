@@ -12,7 +12,6 @@ services:
 env:
   global:
     - USE_DOCKER=true
-    - GITTHUB_USER=mcarey-solstice
 
 before_install:
   - echo "Pulling docker images"
