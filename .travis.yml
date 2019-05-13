@@ -4,6 +4,8 @@
 
 language: general
 
+sudo: true
+
 services:
   - docker
 
@@ -27,7 +29,7 @@ before_deploy:
   - make VERSION=${TRAVIS_TAG} docs
   ###
   # Travis keeps the root permissions on new files
-  - chown -R travis:travis out
+  - sudo chown -R travis:travis out
   ##
   - ./bin/package ${TRAVIS_TAG} dist
 
